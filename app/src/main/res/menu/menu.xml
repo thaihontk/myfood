@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="HardcodedText">
+    <item
+        android:title="Tài khoản">
+        <menu>
+            <item android:id="@+id/menu_taikhoan" android:title="Quản lý tài khoản"></item>
+            <item android:id="@+id/menu_dangxuat" android:title="Đăng xuất"></item>
+        </menu>
+    </item>
+    <item android:id="@+id/menu_thich"
+        android:title= "Thích"/>
+    <item android:id="@+id/menu_lichsu"
+        android:title= "Lịch sử" />
+</menu>
