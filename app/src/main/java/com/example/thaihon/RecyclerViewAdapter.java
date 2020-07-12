@@ -61,15 +61,15 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Recyc
         holder.diachimonan.setText(diachimonan.get(position));
         holder.giamonan.setText(giamonan.get(position));
         holder.motamonan.setText(motamonan.get(position));
-        Picasso.get().load(urlmonan.get(position)).into(holder.urlmonan1);
+        Picasso.get().load(url.get(position)+urlmonan.get(position)).into(holder.urlmonan1);
         holder.urlmonan1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, thongtin.class);
-                intent.putExtra("idnguoidung",idnguoidung.get(position));
+                intent.putExtra("idnguoidung",admin.getId());
                 intent.putExtra("idmonan",idmonan.get(position));
-                intent.putExtra("url", url.get(position));
+                intent.putExtra("url", admin.getUrl());
                 context.startActivity(intent);
             }
         });

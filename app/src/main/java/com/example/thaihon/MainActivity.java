@@ -2,6 +2,7 @@ package com.example.thaihon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -30,7 +32,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     Button btndangnhap, btndangky;
     EditText edittaikhoan, editmatkhau;
-    String url = "http://10.2.19.238";
+    String url = "http://192.168.10.28";
+    Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         btndangky = (Button)findViewById(R.id.btndangky);
         editmatkhau = (EditText)findViewById(R.id.editmatkhau);
         edittaikhoan = (EditText)findViewById(R.id.edittaikhoan);
-        //checkInternetConnection();
+
+        showDialog();
         final Intent[] intent = new Intent[10];
         btndangnhap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,10 +103,20 @@ public class MainActivity extends AppCompatActivity {
                             //String idnguoidung = jsonObject[i].getString("id");
                         };
                         //Toast.makeText(getApplicationContext(), jsonObject[0].getString("id"), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this,trangchu.class);
+                        Intent intent = new Intent(MainActivity.this,admin.class);
                         intent.putExtra("idnguoidung", jsonObject[0].getString("id"));
                         intent.putExtra("pass", jsonObject[0].getString("matkhau"));
+                        intent.putExtra("ten", jsonObject[0].getString("hoten"));
+                        intent.putExtra("diachi", jsonObject[0].getString("diachi"));
+                        intent.putExtra("lat", jsonObject[0].getString("lat"));
+                        intent.putExtra("lng", jsonObject[0].getString("lng"));
                         intent.putExtra("url", url1);
+                        intent.putExtra("ship1", jsonObject[0].getString("ship1"));
+                        intent.putExtra("ship2", jsonObject[0].getString("ship2"));
+                        intent.putExtra("ship3", jsonObject[0].getString("ship3"));
+                        intent.putExtra("tinh", jsonObject[0].getString("tinh"));
+                        intent.putExtra("quan", jsonObject[0].getString("quan"));
+                        intent.putExtra("phuong", jsonObject[0].getString("phuong"));
                         startActivity(intent);
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
@@ -128,5 +142,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         requestQueue.add(stringRequest);
+    }
+    public void showDialog() {
+        dialog = new Dialog(MainActivity.this);
+        dialog.setTitle("xác nhận ip máy chủ");
+        dialog.setContentView(R.layout.dialog_ip);
+        final EditText editviewip = (EditText) dialog.findViewById(R.id.edit_dialog_ip);
+        Button btn = (Button) dialog.findViewById(R.id.btn_dialog_ip);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                url = "http://" + editviewip.getText() ;
+                //Toast.makeText(getApplicationContext(),url, Toast.LENGTH_LONG).show();
+                dialog.cancel();
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.show();
     }
 }

@@ -5,7 +5,7 @@
     <item
         android:title="Tài khoản">
         <menu>
-            <item android:id="@+id/menu_taikhoan" android:title="Quản lý tài khoản"></item>
+            <item android:id="@+id/menu_taikhoan" android:title="Thông tin tài khoản"></item>
             <item android:id="@+id/menu_dangxuat" android:title="Đăng xuất"></item>
         </menu>
     </item>
@@ -13,4 +13,12 @@
         android:title= "Thích"/>
     <item android:id="@+id/menu_lichsu"
         android:title= "Lịch sử" />
+    <item
+        android:title="Món ăn">
+        <menu>
+            <item android:id="@+id/menu_themmonan" android:title="Thêm món ăn"></item>
+            <item android:id="@+id/menu_quanlymonan" android:title="Quản lý món ăn"></item>
+            <item android:id="@+id/menu_donhang" android:title="Đơn hàng"></item>
+        </menu>
+    </item>
 </menu>

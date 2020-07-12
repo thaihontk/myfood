@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".thongtintaikhoan">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Xin chào"
+                android:id="@+id/text_tttk_chao"></TextView>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="tên"
+                android:id="@+id/edit_tttk_ten"></EditText>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="địa chỉ"
+                android:id="@+id/edit_tttk_diachi"></EditText>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <Spinner
+                    android:id="@+id/spin_tttk_tinh"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"></Spinner>
+
+                <Spinner
+                    android:id="@+id/spin_tttk_quan"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"></Spinner>
+
+                <Spinner
+                    android:id="@+id/spin_tttk_phuong"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"></Spinner>
+            </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="cập nhật"
+                android:id="@+id/btn_tttk_capnhat"></Button>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="đổi mật khẩu"
+                android:id="@+id/btn_tttk_matkhau"></Button>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/line_tttk_matkhau">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="Nhập mật khẩu mới"
+                    android:id="@+id/edit_tttk_mk1"></EditText>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="Nhập lại mật khẩu mới"
+                    android:id="@+id/edit_tttk_mk2"></EditText>
+
+                <Button
+                    android:id="@+id/btn_tttk_doimatkhau"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="xác nhận"
+                    android:layout_height="wrap_content"></Button>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Dành riêng cho quán ăn"
+                android:id="@+id/btn_tttk_quanan"></Button>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/line_tttk_quanan">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nhập vị trí tương đối trên bản đồ:"></TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Latitude"
+                        android:id="@+id/edit_tttk_lat"></EditText>
+                    <EditText
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Longitude"
+                        android:id="@+id/edit_tttk_lng"></EditText>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="_____________________________________"></TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nhập phí ship đối với từng khu vực:"></TextView>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Cùng phường"
+                    android:id="@+id/edit_tttk_phuong"></EditText>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Khác phường"
+                    android:inputType="number"
+                    android:id="@+id/edit_tttk_quan"></EditText>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Khác quận"
+                    android:inputType="number"
+                    android:id="@+id/edit_tttk_tinh"></EditText>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="xác nhận"
+                    android:id="@+id/btn_tttk_xacnhanquanan"></Button>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

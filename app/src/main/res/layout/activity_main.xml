@@ -12,63 +12,85 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="74dp">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/logo_red"></ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            android:text="Tài khoản"></TextView>
+
         <EditText
+            android:id="@+id/edittaikhoan"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:maxLines="1"
-            android:lines="1"
+            android:layout_height="70dp"
+            android:textSize="40dp"
             android:alpha="0.5"
 
-            android:hint="Tên tài khoản"
-            android:text="thaihon"
-            android:id="@+id/edittaikhoan"></EditText>
+            android:gravity="center"
+            android:lines="1"
+            android:maxLines="1"></EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Mật khẩu"></TextView>
+
         <EditText
+            android:id="@+id/editmatkhau"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textSize="40dp"
+            android:alpha="0.5"
+
             android:inputType="textPassword"
-
-            android:maxLines="1"
             android:lines="1"
-            android:alpha="0.5"
-            android:hint="Mật khẩu"
-            android:text="123456"
-            android:shadowColor="@color/colorPrimaryDark"
-            android:id="@+id/editmatkhau"></EditText>
+            android:maxLines="1"
+            android:shadowColor="@color/colorPrimaryDark"></EditText>
+
         <Button
-            android:layout_width="match_parent"
-            android:layout_marginTop="5dp"
+            android:id="@+id/btndangnhap"
+            android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:text="ĐĂNG NHẬP"
-            android:id="@+id/btndangnhap"
-            android:textColor="#FF0000"
+            android:layout_marginTop="5dp"
             android:alpha="0.5"
+            android:background="@drawable/bogoc"
+            android:text="ĐĂNG NHẬP"
+            android:textColor="#FF0000"
             tools:ignore="InvalidId"></Button>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:layout_gravity="center"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account?"></TextView>
+
             <Button
+                android:id="@+id/btndangky"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="đăng ký"
-                android:id="@+id/btndangky"
-                android:background="@android:color/transparent"></Button>
+                android:background="@android:color/transparent"
+                android:text="đăng ký"></Button>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

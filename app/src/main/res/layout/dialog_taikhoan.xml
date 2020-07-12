@@ -2,38 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
     android:layout_height="wrap_content"
+    android:alpha="0.8"
     android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chào ..."
+        android:text="ĐỔI MẬT KHẨU"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="40dp"
         android:layout_gravity="center"
+        android:textSize="50dp"
         android:id="@+id/text_dialog_tk"></TextView>
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Nhập mật khẩu cũ"></TextView>
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:inputType="textPassword"
         android:id="@+id/edit_dialog_tk"></EditText>
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Nhập mật khẩu mới"></TextView>
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:inputType="textPassword"
         android:id="@+id/edit1_dialog_tk"></EditText>
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Nhập lại mật khẩu mới"></TextView>
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:inputType="textPassword"
         android:id="@+id/edit2_dialog_tk"></EditText>
     <Button

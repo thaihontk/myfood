@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -42,6 +46,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class trangchu extends AppCompatActivity {
     private List<String> urlsv = new ArrayList<>();
@@ -55,6 +66,7 @@ public class trangchu extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ImageView hinh;
+    String realpath = "";
     SearchView sv_tc_timkiem;
     Dialog dialog;
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -62,10 +74,10 @@ public class trangchu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trangchu);
-        Intent intent = getIntent();
-        final String url = intent.getStringExtra("url");
-        final String idnguoidung = intent.getStringExtra("idnguoidung");
-        final String pass = intent.getStringExtra("pass");
+
+        final String url = admin.getUrl();
+        final String idnguoidung = admin.getId();
+        final String pass = admin.getPass();
         addControl();
         layhinh();
         createData(url,idnguoidung);
@@ -100,17 +112,34 @@ public class trangchu extends AppCompatActivity {
         Intent intent = getIntent();
         switch (item.getItemId()) {
             case R.id.menu_lichsu:
-                //
+                Intent intent0 = new Intent(trangchu.this,lichsu.class);
+                intent0.putExtra("url", admin.getUrl());
+                intent0.putExtra("idnguoidung", admin.getId());
+                startActivity(intent0);
                 return true;
             case R.id.menu_thich:
-                thich(intent.getStringExtra("url"),intent.getStringExtra("idnguoidung"));
+                thich(admin.getUrl(),admin.getId());
                 return true;
             case R.id.menu_taikhoan:
-                showDialog(intent.getStringExtra("url"),intent.getStringExtra("idnguoidung"),intent.getStringExtra("pass"));
+                Intent intent4 = new Intent(trangchu.this,thongtintaikhoan.class);
+                startActivity(intent4);
                 return true;
             case R.id.menu_dangxuat:
                 Intent intent1 = new Intent(trangchu.this,MainActivity.class);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent1);
+                return true;
+            case R.id.menu_themmonan:
+                Intent intent2 = new Intent(trangchu.this,themmonan.class);
+                startActivity(intent2);
+                return true;
+            case R.id.menu_quanlymonan:
+                Intent intent3 = new Intent(trangchu.this,danhsachmonan.class);
+                startActivity(intent3);
+                return true;
+            case R.id.menu_donhang:
+                Intent intent5 = new Intent(trangchu.this,donhang.class);
+                startActivity(intent5);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -178,6 +207,9 @@ public class trangchu extends AppCompatActivity {
     private void layhinh(){
         try {
             Picasso.get().load("https://i.imgur.com/zS795OK.jpg").into(hinh);
+
+            //Picasso.get().load("http://10.2.19.238/img/tuc.jpg").into(hinh);
+            //Picasso.get().load("file:///storage/emulated/0/Download/Gioithieubp-1.jpg").into(hinh);
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.toString(), Toast.LENGTH_LONG).show();
         }
@@ -295,6 +327,7 @@ public class trangchu extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
+
     public void showDialog(final String url,final String idnguoidung ,final String matkhau) {
         dialog = new Dialog(trangchu.this);
         dialog.setTitle("Quản lý tài khoản");
@@ -319,6 +352,23 @@ public class trangchu extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.show();
     }
+
+    public void showDialog3() {
+        final Intent intent = getIntent();
+        dialog = new Dialog(trangchu.this);
+        dialog.setTitle("Lưu ý");
+        dialog.setContentView(R.layout.dialog_luuy);
+        Button btn_dialogly = (Button)dialog.findViewById(R.id.btn_dialogly);
+        btn_dialogly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.show();
+    }
+
     private void doimatkhau(final String url1,final String idnguoidung, final String matkhau ){
         String url = url1+"/doimatkhau.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);

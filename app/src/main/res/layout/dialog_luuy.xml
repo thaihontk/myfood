@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:alpha="0.8"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:text="Vui lòng upload ảnh lên imgur.com và sử dụng url từ trang này để dễ dáng sử lý và lưu trữ"></TextView>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="đồng ý"
+        android:layout_gravity="center"
+        android:id="@+id/btn_dialogly"></Button>
+</LinearLayout>

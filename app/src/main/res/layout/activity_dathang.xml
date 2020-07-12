@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".dathang">
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
         <LinearLayout
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
@@ -17,60 +17,94 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chào bạn:"></TextView>
+                android:text="Chào bạn:"
+                android:id="@+id/text_dh_ten"></TextView>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Xin nhập địa chỉ giao hàng hoặc"></TextView>
-                <Button
-                    android:paddingLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:text="sử dụng vị trí hiện tại"
-                    android:id="@+id/btn_dh_vitri"></Button>
+                    android:text="Xin nhập địa chỉ giao hàng"></TextView>
             </LinearLayout>
+
             <EditText
+                android:id="@+id/edit_dh_diachi"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="xin nhập họ và tên"
-                android:id="@+id/edit_dh_ten"></EditText>
-            <EditText
+                android:hint="Xin nhập địa chỉ"></EditText>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="xin nhập số điện thoại"
+                android:layout_marginTop="10dp">
+
+                <Spinner
+                    android:id="@+id/spin_dh_thanhpho"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"></Spinner>
+
+                <Spinner
+                    android:id="@+id/spin_dh_quan"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"></Spinner>
+
+                <Spinner
+                    android:id="@+id/spin_dh_phuong"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"></Spinner>
+            </LinearLayout>
+
+            <EditText
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Xin nhập số điện thoại"
+                android:inputType="number"
                 android:id="@+id/edit_dh_sdt"></EditText>
-            <SearchView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:text=" Số lượng:"></TextView>
+                <Spinner
+                    android:id="@+id/spin_dh_soluong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></Spinner>
+            </LinearLayout>
+
+            <EditText
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:queryHint="địa chỉ"
-                android:id="@+id/sv_dh_diachi"></SearchView>
-            <TextView
-                android:layout_width="wrap_content"
+                android:hint="Xin nhập ghi chú"
+                android:id="@+id/edit_dh_ghichu"></EditText>
+            <EditText
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="8dp"
-                android:text="Nếu vị trí sai, vui lòng chọn vị trí khả dụng gần nhất"></TextView>
+                android:hint="Xin nhập mã giảm giá"
+                android:id="@+id/edit_dh_giamgia"></EditText>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="xác nhận thông tin"
                 android:layout_gravity="right"
                 android:id="@+id/btn_dh_xacnhanthongtin"></Button>
-            <fragment
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_height="150dp"
-                android:id="@+id/mapdathang"
-                android:name="com.google.android.gms.maps.SupportMapFragment" />
+                android:layout_height="180dp"
+                android:id="@+id/img_dh_hinhnen"></ImageView>
 
             <LinearLayout
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp">
-
+                android:layout_marginTop="30dp">
                 <LinearLayout
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
@@ -101,12 +135,10 @@
                         android:layout_height="wrap_content"
                         android:text="tổng:"></TextView>
                 </LinearLayout>
-
                 <LinearLayout
-                    android:layout_width="260dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <TextView
                         android:id="@+id/text_dh_mathang"
                         android:layout_width="wrap_content"

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:alpha="0.8"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Tên món ăn"></TextView>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:id="@+id/edit_themsp_ten"></EditText>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Giá"></TextView>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:id="@+id/edit_themsp_gia"></EditText>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Mô tả món ăn"></TextView>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:id="@+id/edit_themsp_mota"></EditText>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Chọn ảnh đại diện món ăn"></TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+            <TextView
+                android:layout_width="330dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/text_themsp_ava"></TextView>
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/img"
+                android:id="@+id/btn_themsp_ava"></Button>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="XÁC NHẬN"
+            android:id="@+id/btn_themsp_xacnhan"></Button>
+    </LinearLayout>
+</LinearLayout>

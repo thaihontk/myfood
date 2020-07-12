@@ -18,9 +18,13 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,24 +56,23 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class dathang extends FragmentActivity implements OnMapReadyCallback {
+public class dathang extends AppCompatActivity {
 
-    int PERMISSION_ID = 44;
-    FusedLocationProviderClient mFusedLocationClient;
-    private GoogleMap mMap;
-    LatLng latLng;
-    Location diachi = new Location("địa chỉ");
-    Location vitri = new Location("vị trí");
-    EditText edit_dh_ten, edit_dh_sdt;
-    TextView text_dh_mathang, text_dh_gia, text_dh_phiship, text_dh_giamgia, text_dh_tong;
-    Button btn_dh_xacnhanthongtin, btn_dh_xaccnhandonhang, btn_dh_vitri;
-    SearchView sv_dh_diachi;
+    EditText edit_dh_diachi, edit_dh_ghichu, edit_dh_sdt, edit_dh_magiamgia;
+    TextView text_dh_mathang, text_dh_gia, text_dh_phiship, text_dh_giamgia, text_dh_tong, text_dh_ten;
+    Button btn_dh_xacnhanthongtin, btn_dh_xaccnhandonhang;
+    Spinner tinh, quan, phuong, soluong;
+    ImageView img_dh_hinhnen;
+    private List<String> list_tinh = new ArrayList<>();
+    private List<String> list_quan = new ArrayList<>();
+    private List<String> list_phuong = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,49 +81,16 @@ public class dathang extends FragmentActivity implements OnMapReadyCallback {
         final String url = intent.getStringExtra("url");
         final String idmonan = intent.getStringExtra("idmonan");
         final String idnguoidung = intent.getStringExtra("idnguoidung");
+        final String urlhinnen = intent.getStringExtra("urlhinhnen");
         bien();
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        getLastLocation();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapdathang);
-        mapFragment.getMapAsync(this);
-
-
-        sv_dh_diachi.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                String search = sv_dh_diachi.getQuery().toString();
-                List<Address> addressList = null;
-                if (search != null || !search.equals("")){
-                    Geocoder geocoder = new Geocoder(dathang.this);
-                    try {
-                        addressList = geocoder.getFromLocationName(search,1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Address address = addressList.get(0);
-                    LatLng latLng2 = new LatLng(address.getLatitude(),address.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(latLng2).title("my home"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng2));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ) );
-                    vitri.setLongitude(address.getLongitude());
-                    vitri.setLatitude(address.getLatitude());
-                }
-                Toast.makeText(getApplicationContext(),"Lỗi",Toast.LENGTH_LONG);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+        themsoluong();
+        Picasso.get().load(urlhinnen).into(img_dh_hinhnen);
+        text_dh_ten.setText("Chào bạn: "+admin.getTen());
         btn_dh_xacnhanthongtin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dulieu(url,idmonan);
+                btn_dh_xaccnhandonhang.setEnabled(true);
             }
         });
         btn_dh_xaccnhandonhang.setOnClickListener(new View.OnClickListener() {
@@ -128,27 +98,176 @@ public class dathang extends FragmentActivity implements OnMapReadyCallback {
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
                 Date date = cal.getTime();
-                SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
                 //Toast.makeText(getApplicationContext(),sdf.format(date), Toast.LENGTH_LONG).show();
-                themlichsu(url,idnguoidung, idmonan, text_dh_tong.getText().toString(),sdf.format(date),edit_dh_sdt.getText().toString(),edit_dh_ten.getText().toString());
+                themlichsu(url,idnguoidung, idmonan, text_dh_tong.getText().toString(),sdf.format(date),edit_dh_sdt.getText().toString(),edit_dh_magiamgia.getText().toString(),edit_dh_diachi.getText().toString()+", "+phuong.getSelectedItem()+", "+quan.getSelectedItem()+", "+tinh.getSelectedItem(),edit_dh_ghichu.getText().toString(),soluong.getSelectedItem().toString());
             }
         });
-
+        dulieutinh();
+        tinh.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                //đối số postion là vị trí phần tử trong list Data
+                String msg = "position :" + position + " value :" + list_tinh.get(position);
+                //Toast.makeText(dathang.this, msg, Toast.LENGTH_SHORT).show();
+                dulieuquan(list_tinh.get(position));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                Toast.makeText(dathang.this, "onNothingSelected", Toast.LENGTH_SHORT).show();
+            }
+        });
+        quan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                dulieuphuong(tinh.getSelectedItem().toString(),list_quan.get(position));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                Toast.makeText(dathang.this, "onNothingSelected", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
     public void bien(){
-        edit_dh_ten = (EditText)findViewById(R.id.edit_dh_ten);
         edit_dh_sdt = (EditText)findViewById(R.id.edit_dh_sdt);
+        edit_dh_diachi = (EditText)findViewById(R.id.edit_dh_diachi);
+        edit_dh_magiamgia = (EditText)findViewById(R.id.edit_dh_giamgia);
+        edit_dh_ghichu = (EditText)findViewById(R.id.edit_dh_ghichu);
         text_dh_mathang = (TextView)findViewById(R.id.text_dh_mathang);
         text_dh_gia = (TextView)findViewById(R.id.text_dh_gia);
         text_dh_phiship = (TextView)findViewById(R.id.text_dh_phiship);
         text_dh_giamgia = (TextView)findViewById(R.id.text_dh_giamgia);
         text_dh_tong = (TextView)findViewById(R.id.text_dh_tong);
+        text_dh_ten = (TextView)findViewById(R.id.text_dh_ten);
+        img_dh_hinhnen = (ImageView) findViewById(R.id.img_dh_hinhnen);
         btn_dh_xaccnhandonhang = (Button)findViewById(R.id.btn_dh_xacnhandonhang);
+        btn_dh_xaccnhandonhang.setEnabled(false);
         btn_dh_xacnhanthongtin = (Button)findViewById(R.id.btn_dh_xacnhanthongtin);
-        btn_dh_vitri = (Button)findViewById(R.id.btn_dh_vitri);
-        sv_dh_diachi = (SearchView)findViewById(R.id.sv_dh_diachi);
+        tinh = (Spinner)findViewById(R.id.spin_dh_thanhpho);
+        quan = (Spinner)findViewById(R.id.spin_dh_quan);
+        phuong = (Spinner)findViewById(R.id.spin_dh_phuong);
+        soluong = (Spinner)findViewById(R.id.spin_dh_soluong);
+    }
+    public void themsoluong(){
+        String soluong1[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        ArrayAdapter spinnerAdapter = new ArrayAdapter<>(getApplicationContext (), R.layout.support_simple_spinner_dropdown_item, soluong1);
+        soluong.setAdapter(spinnerAdapter);
+    }
+    public void dulieutinh(){
+        final String url = admin.getUrl()+"/tentinh.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(),response.trim(), Toast.LENGTH_LONG).show();
+                try {
+                    JSONArray jsonArray = new JSONArray(response.trim());
+                    JSONObject jsonObject[] = new JSONObject[jsonArray.length()];
+                    list_tinh.clear();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject[i] = (JSONObject) jsonArray.get(i);
+                        list_tinh.add(jsonObject[i].getString("tentinh"));
+                    }
+                    //Toast.makeText(getApplicationContext(),"sdấdâda" + list_tinh.get(0), Toast.LENGTH_LONG).show();
+                    ArrayAdapter spinnerAdapter = new ArrayAdapter<>(getApplicationContext (), R.layout.support_simple_spinner_dropdown_item, list_tinh);
+                    tinh.setAdapter(spinnerAdapter);
+                } catch (JSONException e1) {
+                    Toast.makeText(getApplicationContext(), "Lỗi json", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+
+    }
+
+    public void dulieuphuong(final String tentinh, final String tenquan){
+        final String url = admin.getUrl()+"/tenphuong.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(),response.trim(), Toast.LENGTH_LONG).show();
+                try {
+                    JSONArray jsonArray = new JSONArray(response.trim());
+                    JSONObject jsonObject[] = new JSONObject[jsonArray.length()];
+                    list_phuong.clear();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject[i] = (JSONObject) jsonArray.get(i);
+                        list_phuong.add(jsonObject[i].getString("tenphuong"));
+                    }
+                    //Toast.makeText(getApplicationContext(),jsonObject[9].getString("tentinh"), Toast.LENGTH_LONG).show();
+                    ArrayAdapter spinnerAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, list_phuong);
+                    phuong.setAdapter(spinnerAdapter);
+                } catch (JSONException e1) {
+                    Toast.makeText(getApplicationContext(), "Lỗi json phuong "+e1.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("tentinh",tentinh);
+                params.put("tenquan",tenquan);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+    public void dulieuquan(final String tentinh){
+        final String url = admin.getUrl()+"/tenquan.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(),response.trim(), Toast.LENGTH_LONG).show();
+                try {
+                    JSONArray jsonArray = new JSONArray(response.trim());
+                    JSONObject jsonObject[] = new JSONObject[jsonArray.length()];
+                    list_quan.clear();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject[i] = (JSONObject) jsonArray.get(i);
+                        list_quan.add(jsonObject[i].getString("tenquan"));
+                    }
+                    //Toast.makeText(getApplicationContext(),jsonObject[9].getString("tentinh"), Toast.LENGTH_LONG).show();
+                    ArrayAdapter spinnerAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, list_quan);
+
+                    quan.setAdapter(spinnerAdapter);
+                } catch (JSONException e1) {
+                    Toast.makeText(getApplicationContext(), "Lỗi json", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("tentinh",tentinh);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
     public void dulieu(final String url1,final String idmonan){
         final String url = url1+"/thongtin.php";
@@ -164,27 +283,20 @@ public class dathang extends FragmentActivity implements OnMapReadyCallback {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObject[i] = (JSONObject) jsonArray.get(i);
                         text_dh_mathang.setText(jsonObject[i].getString("tenmonan"));
-                        text_dh_gia.setText(jsonObject[i].getString("giamonan"));
-                        text_dh_giamgia.setText("0 VNĐ");
-                        int gia = Integer.parseInt(jsonObject[i].getString("giamonan"));
-                        Double lat = jsonObject[i].getDouble("lat");
-                        Double lng = jsonObject[i].getDouble("lng");
-
-                        diachi.setLatitude(lat);
-                        diachi.setLongitude(lng);
-                        double distance=vitri.distanceTo(diachi)/1000;
-                        //text_tt_khoangcach.setText(Math.round(distance*100)/100+"");
-                        //text_tt_khoangcach.setText("Khoảng cách: "+(double)Math.round(distance*100)/100+" km");
-                        if((double)Math.round(distance*100)/100<5){
-                            int ship = 15000;
-                            text_dh_phiship.setText(ship+" VNĐ");
-                            text_dh_tong.setText(gia+ship+"");
-                        }else {
-                            int ship = 20000;
-                            text_dh_phiship.setText(ship+" VNĐ");
-                            text_dh_tong.setText(gia+ship+"");
-                        }
+                        int gia1 = Integer.parseInt(jsonObject[i].getString("giamonan"));
+                        int gia2 = Integer.parseInt(soluong.getSelectedItem().toString());
+                        int gia = gia1 * gia2;
+                        text_dh_gia.setText(gia+"");
+                        text_dh_giamgia.setText("0");
+                        if(jsonObject[i].getString("tinh").equals(tinh.getSelectedItem())){
+                            if(jsonObject[i].getString("quan").equals(quan.getSelectedItem())){
+                                if(jsonObject[i].getString("phuong").equals(phuong.getSelectedItem())){
+                                    text_dh_phiship.setText(jsonObject[i].getString("ship1"));
+                                }else text_dh_phiship.setText(jsonObject[i].getString("ship2"));
+                            }else text_dh_phiship.setText(jsonObject[i].getString("ship3"));
+                        }else text_dh_phiship.setText(jsonObject[i].getString("ship3"));
                     }
+                    dulieu2(edit_dh_magiamgia.getText().toString());
                     ;
                     //Toast.makeText(getApplicationContext(),lat.toString(), Toast.LENGTH_LONG).show();
 
@@ -207,7 +319,57 @@ public class dathang extends FragmentActivity implements OnMapReadyCallback {
         };
         requestQueue.add(stringRequest);
     }
-    public void themlichsu(final String url1,final String idnguoidung, final String idmonan, final String thanhtien, final String ngay, final String sdt, final String ten){
+    public void dulieu2(final String magiamgia){
+        final String url = admin.getUrl()+"/magiamgia.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(),response.trim(), Toast.LENGTH_LONG).show();
+                try {
+                    JSONArray jsonArray = new JSONArray(response.trim());
+                    JSONObject jsonObject[] = new JSONObject[jsonArray.length()];
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject[i] = (JSONObject) jsonArray.get(i);
+
+                        if(jsonObject[i].getString("kieu").equals("ship")){
+                            if(jsonObject[i].getInt("giatri")<Integer.parseInt(text_dh_phiship.getText().toString())){
+                                text_dh_giamgia.setText(jsonObject[i].getString("giatri"));
+                            }else {
+                                text_dh_giamgia.setText(text_dh_phiship.getText().toString());
+                            }
+                        }else if(jsonObject[i].getInt("giatri")<Integer.parseInt(text_dh_gia.getText().toString())){
+                            text_dh_giamgia.setText(jsonObject[i].getString("giatri"));
+                        }else {
+                            int ma = Integer.parseInt(text_dh_gia.getText().toString())-1;
+                            text_dh_giamgia.setText(String.valueOf(ma));
+                        }
+                    }
+                    int tong = Integer.parseInt(text_dh_phiship.getText().toString()) + Integer.parseInt(text_dh_gia.getText().toString()) - Integer.parseInt(text_dh_giamgia.getText().toString());
+                    text_dh_tong.setText(String.valueOf(tong));
+                    //Toast.makeText(getApplicationContext(),lat.toString(), Toast.LENGTH_LONG).show();
+
+                } catch (JSONException e1) {
+                    Toast.makeText(getApplicationContext(), "Lỗi json", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("magiamgia", magiamgia);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+    public void themlichsu(final String url1, final String idnguoidung, final String idmonan, final String thanhtien, final String ngay, final String sdt, final String magiamgia, final String diachi,final String ghichu,final String soluong){
         String url = url1+"/themlichsu.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -232,127 +394,14 @@ public class dathang extends FragmentActivity implements OnMapReadyCallback {
                 params.put("sdt", sdt);
                 params.put("thanhtien", thanhtien);
                 params.put("ngay", ngay);
-                params.put("ten", ten);
+                params.put("magiamgia", magiamgia);
+                params.put("diachi", diachi);
+                params.put("ghichu", ghichu);
+                params.put("soluong", soluong);
+                params.put("ten", admin.getTen());
                 return params;
             }
         };
         requestQueue.add(stringRequest);
-    }
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        //LatLng location = new LatLng(lat, lng);
-        //LatLng location = new LatLng(10.038394, 105.779115);
-        //mMap.addMarker(new MarkerOptions().position(location).title("test"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ) );
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getLastLocation(){
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-                mFusedLocationClient.getLastLocation().addOnCompleteListener(
-                        new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                Location location = task.getResult();
-                                if (location == null) {
-                                    requestNewLocationData();
-                                } else {
-                                    //latTextView.setText(location.getLatitude()+"");
-                                    //lonTextView.setText(location.getLongitude()+"");
-                                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                    mMap.addMarker(new MarkerOptions().position(latLng).title(""));
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
-                                }
-                            }
-                        }
-                );
-            } else {
-                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        } else {
-            requestPermissions();
-        }
-    }
-
-
-    @SuppressLint("MissingPermission")
-    private void requestNewLocationData(){
-
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(0);
-        mLocationRequest.setFastestInterval(0);
-        mLocationRequest.setNumUpdates(1);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.requestLocationUpdates(
-                mLocationRequest, mLocationCallback,
-                Looper.myLooper()
-        );
-
-    }
-
-    private LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            Location mLastLocation = locationResult.getLastLocation();
-            latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title(""));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
-        }
-    };
-
-    private boolean checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
-    }
-
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(
-                this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                PERMISSION_ID
-        );
-    }
-
-    private boolean isLocationEnabled() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-                LocationManager.NETWORK_PROVIDER
-        );
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation();
-            }
-        }
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        if (checkPermissions()) {
-            getLastLocation();
-        }
-
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
     }
 }

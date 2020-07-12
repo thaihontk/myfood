@@ -4,6 +4,7 @@ package com.example.thaihon;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,17 +35,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -74,30 +73,30 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
     FusedLocationProviderClient mFusedLocationClient;
     private RecyclerViewDanhgia recyclerViewDanhgia;
     Dialog dialog;
-
+    String urlhinhnen;
     private List<String> ten = new ArrayList<>();
     private List<String> mucdo = new ArrayList<>();
     private List<String> danhgia = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(null);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thongtin);
 
         Intent intent = getIntent();
-        final String url = intent.getStringExtra("url");
+        final String url = admin.getUrl();
         final String idmonan = intent.getStringExtra("idmonan");
-        final String idnguoidung = intent.getStringExtra("idnguoidung");
+        final String idnguoidung = admin.getId();
         bien();
         timkiemmonan(url,idmonan);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         getLastLocation();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         createData(url,idmonan);
         btn_tt_dathang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +105,7 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
                 intent.putExtra("idmonan",idmonan);
                 intent.putExtra("idnguoidung",idnguoidung);
                 intent.putExtra("url",url);
+                intent.putExtra("urlhinhnen",urlhinhnen);
                 startActivity(intent);
             }
         });
@@ -121,11 +121,13 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
                 showDialog(url,idnguoidung,idmonan);
             }
         });
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
         mMap.setPadding(0,0,0,0);
         //mMap.getUiSettings().setScrollGesturesEnabled(true);
@@ -135,19 +137,25 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         mMap.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ) );*/
     }
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        MapFragment f = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        if (f != null){
+            getFragmentManager().beginTransaction().remove(f).commit();
+        }
+    }
     public void bien() {
         text_tt_ten = (TextView) findViewById(R.id.text_tt_ten);
         text_tt_diachi = (TextView) findViewById(R.id.text_tt_diachi);
         text_tt_gia = (TextView) findViewById(R.id.text_tt_gia);
         text_tt_mota = (TextView) findViewById(R.id.text_tt_mota);
-        text_tt_khoangcach = (TextView) findViewById(R.id.text_tt_khoangcach);
-        text_tt_ship = (TextView) findViewById(R.id.text_tt_ship);
         btn_tt_dathang = (Button) findViewById(R.id.btn_tt_dathang);
         btn_tt_thich = (Button) findViewById(R.id.btn_tt_thich);
         btn_tt_danhgia = (Button) findViewById(R.id.btn_tt_danhgia);
         img_tt = (ImageView) findViewById(R.id.img_tt);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview_danhgia);
+
     }
     public void showDialog(final String url,final String idnguoidung, final String idmonan) {
         dialog = new Dialog(thongtin.this);
@@ -213,7 +221,7 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
                 //Toast.makeText(getApplicationContext(),response.trim(), Toast.LENGTH_LONG).show();
                 if(response.contains("oke")){
                     Toast.makeText(getApplicationContext(),"Thêm thích thành công!!!", Toast.LENGTH_LONG).show();
-                }else Toast.makeText(getApplicationContext(),"Thêm thích thất bại!!!", Toast.LENGTH_LONG).show();
+                }else Toast.makeText(getApplicationContext(),"Bạn đã thích rồi!!!", Toast.LENGTH_LONG).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -290,16 +298,17 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObject[i] = (JSONObject) jsonArray.get(i);
                         //jsonObject[i].getString("idmonan");
-                        Picasso.get().load(jsonObject[i].getString("url1")).into(img_tt);
+                        Picasso.get().load(url1+jsonObject[i].getString("url1")).into(img_tt);
                         text_tt_ten.setText(jsonObject[i].getString("tenmonan"));
-                        text_tt_diachi.setText("Địa chỉ: " + jsonObject[i].getString("diachimonan") + " - " + jsonObject[i].getString("diachi"));
+                        String dc = jsonObject[i].getString("diachi")+", "+jsonObject[i].getString("phuong")+", "+jsonObject[i].getString("quan")+", "+jsonObject[i].getString("tinh");
+                        text_tt_diachi.setText(dc);
                         text_tt_gia.setText("Giá: " + jsonObject[i].getString("giamonan"));
                         text_tt_mota.setText("Mô tả: " + jsonObject[i].getString("motamonan"));
-
+                        //urlhinhnen = jsonObject[i].getString("urlhinhnen");
                         Double lat = jsonObject[i].getDouble("lat");
                         Double lng = jsonObject[i].getDouble("lng");
                         String ten = jsonObject[i].getString("diachimonan");
-
+                        urlhinhnen = url1+jsonObject[i].getString("url1");
                         final LatLng mlocation = new LatLng(lat, lng);
                         quanan = new Location(jsonObject[i].getString("diachimonan"));
                         quanan.setLatitude(lat);
@@ -307,7 +316,6 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
                         mMap.addMarker(new MarkerOptions().position(mlocation).title(ten));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(mlocation));
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
-
 
                     }
                     ;
@@ -347,7 +355,7 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
                                 } else {
                                     //latTextView.setText(location.getLatitude()+"");
                                     //lonTextView.setText(location.getLongitude()+"");
-                                    vitri = new Location("vị trí");
+                                    /*vitri = new Location("vị trí");
                                     vitri.setLatitude(10.029448);
                                     vitri.setLongitude(105.769499);
                                     double distance=vitri.distanceTo(quanan)/1000;
@@ -359,7 +367,8 @@ public class thongtin extends FragmentActivity implements OnMapReadyCallback {
                                     }else {
                                         int ship = 20000;
                                         text_tt_ship.setText("Phí ship: "+ship+" VNĐ");
-                                    }
+                                    }*/
+                                    //text_tt_ship.setText("Phí ship: "+" test VNĐ");
                                 }
                             }
                         }

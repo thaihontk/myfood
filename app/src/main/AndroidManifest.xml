@@ -3,6 +3,8 @@
     package="com.example.thaihon">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -12,12 +14,20 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".dathang"></activity>
-        <activity android:name=".dume" />
+        <activity android:name=".donhang"></activity>
+        <activity android:name=".thongtintaikhoan" />
+        <activity android:name=".danhsachmonan" />
+        <activity android:name=".quanlymonan" />
+        <activity android:name=".themmonan" />
+        <activity android:name=".spintest" />
+        <activity android:name=".admin" />
+        <activity android:name=".lichsu" />
+        <activity android:name=".dathang" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

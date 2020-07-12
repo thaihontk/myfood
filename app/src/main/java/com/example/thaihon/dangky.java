@@ -125,7 +125,7 @@ public class dangky extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(),response.trim(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),response.trim(), Toast.LENGTH_LONG).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -153,6 +153,9 @@ public class dangky extends AppCompatActivity {
                 if(response.contains("thanh cong")){
                     Toast.makeText(getApplicationContext(),"Đăng ký thành công", Toast.LENGTH_LONG).show();
                     dialog.cancel();
+                    Intent intent = new Intent(dangky.this,MainActivity.class);
+                    //intent.putExtra("url", url1);
+                    startActivity(intent);
                 }else Toast.makeText(getApplicationContext(),"Đăng ký thất bại", Toast.LENGTH_LONG).show();
 
             }

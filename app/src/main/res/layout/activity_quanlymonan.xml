@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".quanlymonan">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:text="chào"
+            android:id="@+id/text_qlmon"></TextView>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Đặt tên món ăn"
+            android:id="@+id/edit_qlmon_ten"></EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Giá"
+            android:inputType="number"
+            android:id="@+id/edit_qlmon_gia"></EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:hint="Mô tả"
+            android:id="@+id/edit_qlmon_mota"></EditText>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:hint="Hình đại diện"
+                android:textSize="20dp"
+                android:id="@+id/text_qlmon_ava"></TextView>
+
+            <Button
+                android:id="@+id/btn_qlmon_ava"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"></Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:hint="Hình nền"
+                android:textSize="20dp"
+                android:id="@+id/text_qlmon_cover"></TextView>
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_qlmon_cover"></Button>
+        </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="xác nhận hình ảnh"
+            android:id="@+id/btn_qlmon_xacnhan"></Button>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sửa"
+            android:layout_gravity="center"
+            android:id="@+id/btn_qlmon_sua"></Button>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
